@@ -4,8 +4,9 @@ const Search = ({ getQuery }) => {
     
     const [text, setText] = useState('');
 
-    const onChange = (query) => {
+    const handleChange = (query) => {
         setText(query);
+        // this getQuery function is passed from the parent component
         getQuery(query);
     }
 
@@ -16,7 +17,7 @@ const Search = ({ getQuery }) => {
                 className='form-control' 
                 placeholder='Search Characters'
                 value={text}
-                onChange={(e) => onChange(e.target.value)}
+                onChange={(e) => handleChange(e.target.value)}
                 autoFocus
                  />
             </form>
