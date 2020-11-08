@@ -93,7 +93,7 @@ componentDidMount() {
 - fetch() function to call GET, POST, PUT, PATCH, and DELETE requests, returuning response object (just an HTTP response, not json)
 - returns a promise which resolves when the request completes
 - cannot directly access to the fetched data, needing to convert to some data format(e.g. json) and to JavaScript object
-- does not reject HTTP404 or 500 errors, since returning the error status (which is considered a successful call)
+- does not reject HTTP404 or 500 errors, since returning the error status is considered a successful call
 - since fetch() returns a promise, async/await can also be used
 
 ```javascript
