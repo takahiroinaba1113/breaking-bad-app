@@ -1,70 +1,104 @@
 # React, axios, hooks practice with breaking-bad-app
 
-Reference: https://www.youtube.com/watch?v=YaioUnMw0mo
+References: 
+React App - Breaking Bad Api
+https://www.youtube.com/watch?v=YaioUnMw0mo
 
-## Available Scripts
+The Breaking Bad API
+https://breakingbadapi.com/documentation
 
-In the project directory, you can run:
+## Learnings
+### Basic Hooks
+#### useState
 
-### `npm start`
+```javascript
+const [state, setState] = useState(initialState);
+setState(newState)
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- returns a stateful value and a function to update it
+- during the initial render, the returned state (state) is the same as the value passed as the first argument (initialState)
+- the setState function is used to update the state, accepting a new state value and enqueues a re-render of the component
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+##### Functional updates
+- if the new state is computed using the previous state, pass a function to setState(), which receive the previous value and return an updated value
 
-### `npm test`
+```javascript
+<button onClick={() => setState(prevState => prevState + something)} ></button>
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+#### useEffect
 
-### `npm run build`
+```javascript
+useEffect(didUpdate);
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- function passed will run after the render is committeed to the screen/DOM
+- used for mutations, subscriptions, timers, logging, and other side effects that are not allowed inside the main body of a function component 
+- by default, effects run after every completed render, but can also be fired only when certain values have changed
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+##### Conditional firing of an effect
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```javascript
+useEffect(
+    () => {
+        const subscription = props.source.subscribe();
+        reutrn () => {
+            subscription.unsubscribe();
+        };
+    }, [props.source],
+);
 
-### `npm run eject`
+// in short,
+useEffect(function, [array]);
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+- when the second arg which is an array is set, useEffect fires when its values are changed 
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### axios
+- a library of HTTP client that makes GET and POST requests from the browser
+- can make requests to an API, return data from the API, and then utilize the data in the app
+- returns a promise which catches errors of 404 or 500
+- can directly access to the data fetched
+- API calls are made asynchronously since need to wait for the server to return the data to the app (there may be a few seconds of wait time before the API returns data)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+```javascript
+const result = await axios(`https://www.breakingbadapi.com/api/characters?name=${query}`)
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+setItems(result.data);
+setIsLoading(false);
+}
+```
 
-## Learn More
+another example
+```javascript
+componentDidMount() {
+  axios.get('https://dog.ceo/api/breeds/image/random')
+  .then(response => {
+    console.log(response.data);
+  })
+  .catch(error => {
+    console.log(error);
+  });
+}
+```
+- make a GET request to the Dog API using axios.get('endpoint')
+- the Dog API returns a random dog photo
+- then output the API data response to the browser's console, using console.log
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
 
-### Code Splitting
+### fetch API
+- a web standard builtin in most modern browsers to let us make HTTP requests to the server
+- fetch() function to call GET, POST, PUT, PATCH, and DELETE requests, returuning response object (just an HTTP response, not json)
+- returns a promise which resolves when the request completes
+- cannot directly access to the fetched data, needing to convert to some data format(e.g. json) and to JavaScript object
+- does not reject HTTP404 or 500 errors, since returning the error status (which is considered a successful call)
+- since fetch() returns a promise, async/await can also be used
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+```javascript
+fetch('http://example.com/example.json')
+    . then((response) => {
+        return response.json();
+    })
+```
