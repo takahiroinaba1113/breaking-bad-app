@@ -1,6 +1,6 @@
-# Getting Started with Create React App
+# React, axios, hooks practice with breaking-bad-app
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Reference: https://www.youtube.com/watch?v=YaioUnMw0mo
 
 ## Available Scripts
 
